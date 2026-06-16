@@ -1,1 +1,1 @@
-# This is a GitHub Repository for the Academy initiatives in Upnow Consulting
+# This is a GitHub Repository for the Academy initiatives
