@@ -2,554 +2,516 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>heyanatomía — El sistema nervioso digital para consultorios médicos</title>
-<meta name="description" content="heyanatomía unifica expedientes, facturación y agenda de tu consultorio de forma autónoma con inteligencia artificial. Prueba la demo en WhatsApp en 60 segundos.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Oca del Machine Learning · MA1062</title>
 <style>
-  /* ============ TOKENS ============ */
-  :root{
-    --bg-950:#020617;        /* ultra dark — hero, CTA, footer */
-    --bg-900:#0f172a;        /* base sections */
-    --card:#111c33;          /* subtle raised surface */
-    --border:#1e293b;        /* borders & divisions */
-    --muted:#94a3b8;         /* secondary / muted text */
-    --dim:#cbd5e1;           /* long-form reading text */
-    --text:#f1f5f9;          /* surgical white — titles */
-    --teal:#14b8a6;          /* conversion accent */
-    --teal-bright:#2dd4bf;   /* glow */
-    --sky:#38bdf8;           /* glow */
-
-    --font:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
-    --grad:linear-gradient(100deg,#2dd4bf,#38bdf8);
-
-    --maxw:1180px;
-    --gut:clamp(20px,5vw,72px);
-  }
-
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    margin:0;background:var(--bg-900);color:var(--text);
-    font-family:var(--font);font-size:17px;font-weight:400;line-height:1.6;
-    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
-  }
-  @media(max-width:600px){body{font-size:16px}}
-  a{color:inherit;text-decoration:none}
-  h1,h2,h3{margin:0;font-family:var(--font);line-height:1.06;letter-spacing:-.022em}
-  h1{font-weight:800}
-  h2{font-weight:700}
-  h3{font-weight:600}
-  p{margin:0}
-  img,svg{display:block;max-width:100%}
-
-  .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;
-    color:transparent;-webkit-text-fill-color:transparent}
-
-  :focus-visible{outline:2px solid var(--teal-bright);outline-offset:3px;border-radius:3px}
-
-  .wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
-
-  /* eyebrow / specimen label */
-  .eyebrow{
-    font-family:var(--font);font-size:12px;font-weight:500;
-    letter-spacing:.2em;text-transform:uppercase;color:var(--teal-bright);
-    display:inline-flex;align-items:center;gap:.7em;margin:0 0 22px;
-  }
-  .eyebrow::before{content:"";width:26px;height:1px;background:currentColor;opacity:.65}
-
-  /* ============ NAV ============ */
-  header.nav{position:sticky;top:0;z-index:50;background:rgba(2,6,23,.82);
-    backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--border);color:var(--text)}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;
-    height:68px;max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
-  .brand{display:flex;align-items:center;gap:11px;font-size:21px;font-weight:700;letter-spacing:-.02em}
-  .brand .hey{font-weight:300;color:var(--muted)}
-  .brand-mark{width:24px;height:24px;flex:0 0 auto}
-  .nav-links{display:flex;align-items:center;gap:30px}
-  .nav-links a.lnk{font-size:14.5px;font-weight:500;color:var(--muted);transition:color .2s}
-  .nav-links a.lnk:hover{color:var(--text)}
-  .btn{display:inline-flex;align-items:center;gap:.55em;font-family:var(--font);
-    font-weight:600;font-size:15px;line-height:1;cursor:pointer;border:none;
-    padding:13px 20px;border-radius:10px;transition:transform .15s ease,background .2s,box-shadow .2s}
-  .btn-primary{background:var(--teal);color:#02120f;box-shadow:0 0 0 1px rgba(45,212,191,.25)}
-  .btn-primary:hover{background:var(--teal-bright);transform:translateY(-1px);
-    box-shadow:0 8px 26px rgba(45,212,191,.35)}
-  .btn-wa svg{width:17px;height:17px}
-  .nav .btn{padding:11px 18px;font-size:14px}
-
-  @media(max-width:860px){.nav-links a.lnk{display:none}}
-
-  /* ============ HERO ============ */
-  .hero{background:var(--bg-950);color:var(--text);position:relative;overflow:hidden}
-  .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
-    background:radial-gradient(1100px 560px at 80% -8%,rgba(20,184,166,.18),transparent 62%),
-               radial-gradient(700px 500px at 95% 30%,rgba(56,189,248,.10),transparent 60%)}
-  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(32px,5vw,72px);
-    align-items:center;padding:clamp(56px,9vw,104px) 0 clamp(64px,9vw,100px);position:relative;z-index:1}
-  .hero h1{font-size:clamp(36px,6vw,66px);max-width:15ch;letter-spacing:-.03em}
-  .hero p.lede{margin:26px 0 0;max-width:52ch;font-size:clamp(16px,1.4vw,18.5px);
-    color:var(--dim);line-height:1.62;font-weight:400}
-  .hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:34px}
-  .hero-cta .btn-primary{padding:16px 24px;font-size:16px}
-  .ghost{font-size:15px;font-weight:500;color:var(--text);border-bottom:1px solid var(--teal);
-    padding-bottom:2px;transition:color .2s,border-color .2s}
-  .ghost:hover{color:var(--teal-bright);border-color:var(--teal-bright)}
-
-  /* specimen chat card */
-  .specimen{position:relative}
-  .specimen .cap{font-size:11px;font-weight:500;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;justify-content:space-between}
-  .chat{background:var(--card);color:var(--text);border-radius:16px;padding:18px;
-    box-shadow:0 28px 70px -24px rgba(0,0,0,.75);border:1px solid var(--border)}
-  .chat-head{display:flex;align-items:center;gap:10px;padding-bottom:13px;margin-bottom:13px;
-    border-bottom:1px solid var(--border)}
-  .chat-head .dot{width:34px;height:34px;border-radius:50%;background:var(--bg-950);
-    display:grid;place-items:center;flex:0 0 auto;border:1px solid var(--border)}
-  .chat-head .dot svg{width:18px;height:18px}
-  .chat-head .who{font-weight:600;font-size:14.5px;line-height:1.2}
-  .chat-head .stat{font-size:12px;font-weight:500;color:var(--teal-bright)}
-  .bubble{padding:10px 13px;border-radius:12px;font-size:14px;line-height:1.45;margin-bottom:9px;max-width:84%}
-  .bubble.them{background:var(--border);border-top-left-radius:4px;color:var(--dim)}
-  .bubble.me{background:rgba(20,184,166,.14);border:1px solid rgba(45,212,191,.35);
-    margin-left:auto;border-top-right-radius:4px}
-  .bubble .act{display:block;font-size:11px;font-weight:500;letter-spacing:.02em;color:var(--teal-bright);margin-top:6px}
-  .typing{display:inline-flex;gap:4px;padding:11px 13px}
-  .typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
-  .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
-  @keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
-
-  @media(max-width:860px){
-    .hero-grid{grid-template-columns:1fr}
-    .specimen{max-width:420px}
-  }
-
-  /* ============ GENERIC SECTION ============ */
-  section{padding:clamp(64px,10vw,120px) 0}
-  .sec-head{max-width:62ch}
-  .sec-head h2{font-size:clamp(28px,4.4vw,46px)}
-  .sec-head p.intro{margin-top:20px;font-size:clamp(16px,1.4vw,19px);color:var(--muted);max-width:58ch}
-
-  /* PAIN */
-  .pain{background:var(--bg-900);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-  .pain h2{font-size:clamp(28px,4.6vw,50px);max-width:18ch}
-  .pain .body{margin-top:26px;max-width:60ch;font-size:clamp(16px,1.4vw,19px);color:var(--dim);line-height:1.66}
-  .pain .body em{font-style:normal;font-weight:600;color:var(--teal-bright)}
-
-  /* ============ ANATOMY PLATE ============ */
-  .anatomia{background:var(--bg-950)}
-  .plate-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:clamp(28px,5vw,64px);
-    margin-top:54px;align-items:start}
-  .figure-frame{position:sticky;top:96px;border:1px solid var(--border);background:var(--bg-900);
-    border-radius:12px;padding:18px}
-  .figure-frame .fcap{display:flex;justify-content:space-between;font-size:11px;font-weight:500;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-    padding-bottom:12px;margin-bottom:6px;border-bottom:1px solid var(--border)}
-  .figure-frame svg{width:100%;height:auto}
-
-  .legend{list-style:none;margin:0;padding:0}
-  .legend li{position:relative;padding:24px 22px 24px 64px;border-top:1px solid var(--border);
-    cursor:default;transition:background .25s}
-  .legend li:first-child{border-top:none}
-  .legend .num{position:absolute;left:0;top:24px;font-weight:600;font-size:14px;color:var(--teal-bright);
-    width:38px;text-align:center;line-height:30px;border:1px solid var(--border);border-radius:50%;
-    height:32px;transition:all .25s}
-  .legend li.active .num{background:var(--teal);color:#02120f;border-color:var(--teal)}
-  .legend .tag{font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--teal);display:block;margin-bottom:7px}
-  .legend h3{font-size:21px;font-weight:600;display:flex;align-items:baseline;gap:.5em;color:var(--text)}
-  .legend h3 .organ{font-size:13px;font-weight:300;color:var(--muted)}
-  .legend p{margin-top:9px;color:var(--muted);font-size:15.5px;line-height:1.58;max-width:46ch}
-  .legend li.active{background:linear-gradient(90deg,rgba(20,184,166,.08),transparent)}
-
-  /* svg region states */
-  .region{opacity:.55;transition:opacity .3s}
-  .region.lit{opacity:1}
-  .region .glow{opacity:0;transition:opacity .3s}
-  .region.lit .glow{opacity:1}
-  .signal{stroke:var(--teal-bright);stroke-width:2.6;fill:none;stroke-linecap:round;
-    stroke-dasharray:7 230;animation:flow 4.5s linear infinite;
-    filter:drop-shadow(0 0 4px rgba(45,212,191,.7))}
-  @keyframes flow{to{stroke-dashoffset:-237}}
-
-  @media(max-width:860px){
-    .plate-grid{grid-template-columns:1fr}
-    .figure-frame{position:static;max-width:420px;margin:0 auto}
-  }
-
-  /* ============ AUTONOMOUS PRACTICE ============ */
-  .auto{background:var(--bg-900);color:var(--text)}
-  .auto .sec-head h2{color:var(--text)}
-  .auto .sec-head p.intro{color:var(--muted)}
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;
-    padding:28px;transition:transform .2s,border-color .2s,box-shadow .2s}
-  .card:hover{transform:translateY(-3px);border-color:var(--teal);
-    box-shadow:0 16px 40px -20px rgba(20,184,166,.5)}
-  .card .ic{width:40px;height:40px;margin-bottom:18px;color:var(--teal-bright);
-    background:rgba(20,184,166,.1);border:1px solid var(--border);border-radius:10px;
-    display:grid;place-items:center}
-  .card .ic svg{width:22px;height:22px}
-  .card h3{font-size:20px;color:var(--text);margin-bottom:10px}
-  .card p{color:var(--muted);font-size:15px;line-height:1.56}
-  .card p em{font-style:normal;font-weight:600;color:var(--teal-bright)}
-  @media(max-width:820px){.cards{grid-template-columns:1fr;max-width:460px}}
-
-  /* ============ HUMAN FACTOR ============ */
-  .human{background:var(--bg-950)}
-  .human-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,80px);align-items:center}
-  .human .body{margin-top:24px;color:var(--dim);font-size:clamp(16px,1.4vw,18.5px);line-height:1.66;max-width:54ch}
-  .human .body strong{color:var(--teal-bright);font-weight:600}
-  .chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-  .chip{font-size:13px;font-weight:500;letter-spacing:.01em;background:var(--card);
-    border:1px solid var(--border);border-radius:999px;padding:9px 16px;display:inline-flex;
-    align-items:center;gap:8px;color:var(--dim)}
-  .chip svg{width:15px;height:15px;color:var(--teal-bright)}
-  .human-aside{border-left:2px solid var(--teal);padding-left:clamp(20px,3vw,34px)}
-  .human-aside .q{font-size:clamp(22px,2.6vw,30px);font-weight:600;line-height:1.3;color:var(--text);letter-spacing:-.02em}
-  .human-aside .a{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--muted);margin-top:18px}
-  @media(max-width:820px){.human-grid{grid-template-columns:1fr}}
-
-  /* ============ FINAL CTA ============ */
-  .final{background:var(--bg-950);color:var(--text);text-align:center;position:relative;overflow:hidden;
-    border-top:1px solid var(--border)}
-  .final::after{content:"";position:absolute;inset:0;pointer-events:none;
-    background:radial-gradient(900px 480px at 50% 118%,rgba(20,184,166,.24),transparent 60%),
-               radial-gradient(700px 420px at 50% -10%,rgba(56,189,248,.10),transparent 60%)}
-  .final .inner{position:relative;z-index:1;max-width:760px;margin:0 auto}
-  .final h2{font-size:clamp(30px,5vw,56px);max-width:16ch;margin:0 auto;letter-spacing:-.03em}
-  .final p{margin:24px auto 0;max-width:48ch;color:var(--dim);font-size:clamp(16px,1.4vw,18.5px)}
-  .final .btn-primary{margin-top:38px;padding:18px 30px;font-size:17px}
-  .final .micro{margin-top:18px;font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--muted)}
-
-  /* ============ FOOTER ============ */
-  footer{background:var(--bg-950);color:var(--muted);border-top:1px solid var(--border);
-    padding:46px 0 40px;font-size:14px}
-  .foot-inner{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:center}
-  .foot-inner .brand{color:var(--text);font-size:20px}
-  .foot-links{display:flex;gap:26px;flex-wrap:wrap}
-  .foot-links a{font-weight:500}
-  .foot-links a:hover{color:var(--text)}
-  .foot-bottom{margin-top:28px;padding-top:22px;border-top:1px solid var(--border);
-    display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:12.5px;
-    font-weight:300;color:var(--muted)}
-
-  @media(prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-  }
+:root{
+  --navy:#0B1F3A; --navy2:#12345E; --cyan:#22D3EE; --cyanD:#007A99; --cyanL:#CFF6FC;
+  --orange:#B45A0C; --orangeL:#FDE7D3; --bg:#F4F7FA; --ink:#1B2B44; --muted:#5B6B80; --line:#D5DEE8; --card:#FDFEFF;
+  --ok:#0F7B4A; --bad:#B42318;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px}
+header{background:var(--navy);color:#F4F7FA;padding:14px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+header h1{margin:0;font-size:22px;letter-spacing:.3px}
+header h1 span{color:var(--cyan)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid transparent;padding:9px 14px;font-weight:600}
+.btn{background:var(--navy2);color:#F4F7FA;border-color:#2A4F7F}
+.btn:hover{background:#1A4373}
+.btn-accent{background:var(--cyan);color:var(--navy)}
+.btn-accent:hover{background:#5EE3F4}
+.btn-ghost{background:var(--card);color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{background:#EAF0F6}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible{outline:3px solid var(--cyanD);outline-offset:2px}
+main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;padding:16px;max-width:1300px;margin:0 auto}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+#board{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;background:var(--card);padding:10px;border-radius:14px;border:1px solid var(--line)}
+.cell{position:relative;min-height:78px;border-radius:10px;padding:6px;border:2px solid transparent;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.cell .num{font-weight:800;font-size:15px}
+.cell .lbl{font-size:11px;line-height:1.15;font-weight:600}
+.cell .tokens{display:flex;flex-wrap:wrap;gap:3px;min-height:20px}
+.c-CLA{background:var(--cyanL);color:var(--navy)}
+.c-FOR{background:#DCE6F5;color:var(--navy)}
+.c-CLU{background:var(--orangeL);color:#5A2D06}
+.c-GEN{background:#ECEFF3;color:var(--ink)}
+.c-OCA{background:var(--navy);color:#F4F7FA}
+.c-SPE{background:#FFF3C4;color:#5A4500;border-color:#E0C24D}
+.c-START{background:#E3F6EC;color:#0B4D2E}
+.c-META{background:var(--cyan);color:var(--navy)}
+.cell.active{border-color:var(--orange);box-shadow:0 0 0 2px var(--orange) inset}
+.tok{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;color:#fff;border:2px solid #fff;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+aside.panel{display:flex;flex-direction:column;gap:12px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.box h2{margin:0 0 8px;font-size:16px;color:var(--navy)}
+#turnInfo{font-size:15px;line-height:1.4}
+#dieWrap{display:flex;align-items:center;gap:12px;margin-top:10px}
+#die{width:64px;height:64px;border-radius:14px;background:var(--navy);color:var(--cyan);font-size:36px;font-weight:800;display:flex;align-items:center;justify-content:center}
+#die.roll{animation:shake .5s}
+@keyframes shake{0%{transform:rotate(0)}25%{transform:rotate(18deg)}50%{transform:rotate(-14deg)}75%{transform:rotate(8deg)}100%{transform:rotate(0)}}
+#players{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+#players li{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;font-size:14px}
+#players li.now{background:var(--cyanL)}
+#players .sc{margin-left:auto;font-weight:700;color:var(--muted)}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid var(--line)}
+#msg{font-size:14px;color:var(--muted);margin-top:6px;min-height:20px}
+.overlay{position:fixed;inset:0;background:rgba(11,31,58,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.overlay.show{display:flex}
+.modal{background:var(--card);border-radius:16px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.modal h3{margin:0 0 6px;color:var(--navy);font-size:20px}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:10px}
+.opts{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.opt{text-align:left;background:#F1F5F9;border:1px solid var(--line);color:var(--ink);font-weight:500;padding:12px}
+.opt:hover:not(:disabled){background:#E3EEF7}
+.opt.right{background:#DDF3E7;border-color:var(--ok)}
+.opt.wrong{background:#FCE4E2;border-color:var(--bad)}
+.fb{padding:12px;border-radius:10px;font-size:15px;line-height:1.45;display:none}
+.fb.ok{display:block;background:#E6F6EE;color:#0B4D2E}
+.fb.no{display:block;background:#FDECEA;color:#7A1A12}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+label{font-weight:600;font-size:14px}
+input[type=text],select{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);width:100%}
+.namegrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+#log{max-height:260px;overflow:auto;font-size:13px;line-height:1.45;padding-left:18px;margin:0}
+#log li{margin-bottom:4px}
+.rules p,.rules li{line-height:1.5;font-size:15px}
+.rank{width:100%;border-collapse:collapse;margin-top:10px}
+.rank th,.rank td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
+.sr{position:absolute;left:-9999px}
 </style>
 </head>
 <body>
-
-<!-- ====== NAV ====== -->
-<header class="nav">
-  <div class="nav-inner">
-    <a class="brand" href="#top" aria-label="heyanatomía inicio">
-      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <defs><linearGradient id="bg" x1="0" y1="0" x2="24" y2="24">
-          <stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#38bdf8"/>
-        </linearGradient></defs>
-        <path d="M12 2v20M12 6c-3 0-5 1.6-5 4M12 6c3 0 5 1.6 5 4M12 13c-3.4 0-5.6 1.8-5.6 4.6M12 13c3.4 0 5.6 1.8 5.6 4.6" stroke="url(#bg)" stroke-width="1.4" stroke-linecap="round"/>
-        <circle cx="12" cy="3" r="1.6" fill="#2dd4bf"/>
-        <circle cx="6.4" cy="17.6" r="1.5" fill="#38bdf8"/>
-        <circle cx="17.6" cy="17.6" r="1.5" fill="#38bdf8"/>
-        <circle cx="7" cy="10" r="1.3" fill="#94a3b8"/>
-        <circle cx="17" cy="10" r="1.3" fill="#94a3b8"/>
-      </svg>
-      <span><span class="hey">hey</span><span class="grad">anatomía</span></span>
-    </a>
-    <nav class="nav-links" aria-label="Principal">
-      <a class="lnk" href="#anatomia">La anatomía del sistema</a>
-      <a class="lnk" href="#autonomo">Consultorio autónomo</a>
-      <a class="lnk" href="#beneficios">Beneficios</a>
-      <a class="btn btn-primary btn-wa" href="#demo">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.2-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .7.5l.9 2c.1.2.1.4 0 .6l-.4.6c-.2.2-.3.4-.1.7.1.3.7 1.1 1.4 1.8 1 .8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.7-.9c.2-.3.4-.2.7-.1l1.9.9c.3.2.5.2.6.4.1.1.1.7-.1 1.4z"/></svg>
-        Probar demo</a>
-    </nav>
+<header>
+  <h1>La Oca del <span>Machine Learning</span></h1>
+  <div class="toolbar">
+    <button class="btn" id="bRules">Reglas</button>
+    <button class="btn" id="bLog">Bitácora</button>
+    <button class="btn-accent" id="bNew">Nueva partida</button>
+    <button class="btn" id="bEnd">Terminar partida</button>
   </div>
 </header>
 
-<!-- ====== HERO ====== -->
-<main id="top">
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="eyebrow">Sistema nervioso digital · consultorios</span>
-      <h1>El primer <span class="grad">Sistema Nervioso Digital</span> diseñado para médicos independientes.</h1>
-      <p class="lede">Deja atrás el desorden administrativo y el agotador salto entre aplicaciones desconectadas. heyanatomía unifica tus expedientes clínicos, tu facturación y tu agenda de forma completamente autónoma mediante inteligencia artificial — un organismo operativo completo para que recuperes el control de tu tiempo y de tu práctica.</p>
-      <div class="hero-cta">
-        <a class="btn btn-primary btn-wa" id="demo" href="https://wa.me/521XXXXXXXXXX?text=Hola%2C%20quiero%20probar%20la%20demo%20de%20heyanatom%C3%ADa" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.2-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .7.5l.9 2c.1.2.1.4 0 .6l-.4.6c-.2.2-.3.4-.1.7.1.3.7 1.1 1.4 1.8 1 .8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.7-.9c.2-.3.4-.2.7-.1l1.9.9c.3.2.5.2.6.4.1.1.1.7-.1 1.4z"/></svg>
-          Probar la demo en WhatsApp · 60 s</a>
-        <a class="ghost" href="#anatomia">Ver la anatomía del sistema</a>
+<main>
+  <section aria-label="Tablero">
+    <div id="board"></div>
+  </section>
+  <aside class="panel">
+    <div class="box">
+      <h2>Turno</h2>
+      <div id="turnInfo">Pulsa <b>Nueva partida</b> para registrar a los jugadores.</div>
+      <div id="dieWrap">
+        <div id="die" aria-live="polite">–</div>
+        <button class="btn-accent" id="bRoll" disabled>Tirar dado</button>
+      </div>
+      <div id="msg" aria-live="polite"></div>
+    </div>
+    <div class="box">
+      <h2>Jugadores</h2>
+      <ul id="players"><li style="color:var(--muted)">Sin partida en curso</li></ul>
+    </div>
+    <div class="box">
+      <h2>Casillas</h2>
+      <div class="legend">
+        <span><i style="background:var(--cyanL)"></i>Clasificación</span>
+        <span><i style="background:#DCE6F5"></i>Forecasting</span>
+        <span><i style="background:var(--orangeL)"></i>Clustering</span>
+        <span><i style="background:#ECEFF3"></i>Conceptos y evaluación</span>
+        <span><i style="background:var(--navy)"></i>Oca</span>
+        <span><i style="background:#FFF3C4"></i>Especial</span>
       </div>
     </div>
-
-    <!-- specimen chat card -->
-    <div class="specimen">
-      <div class="cap"><span>Fig. 0 — Espécimen vivo</span><span>tiempo real</span></div>
-      <div class="chat" role="img" aria-label="Ejemplo de conversación: el sistema gestiona la agenda médica por chat">
-        <div class="chat-head">
-          <span class="dot"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M12 7c-2.4 0-4 1.3-4 3.2M12 7c2.4 0 4 1.3 4 3.2" stroke="#2dd4bf" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="3.6" r="1.4" fill="#2dd4bf"/></svg></span>
-          <div>
-            <div class="who">Asistente del consultorio</div>
-            <div class="stat">● en línea · autónomo</div>
-          </div>
-        </div>
-        <div class="bubble them">Tengo dolor de cabeza desde ayer, ¿hay espacio mañana con el Dr. Herrera?</div>
-        <div class="bubble me">Sí. Le aparto el martes 9:30 a.m. ¿Lo confirmo?
-          <span class="act">→ agenda · cita preliminar creada</span></div>
-        <div class="bubble them">Confírmalo, por favor.</div>
-        <div class="bubble me">Listo. Cita confirmada y recordatorio programado.
-          <span class="act">→ expediente actualizado · cobro vinculado</span></div>
-        <div class="typing" aria-hidden="true"><i></i><i></i><i></i></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SECTION 2 · PAIN ====== -->
-<section class="pain">
-  <div class="wrap">
-    <span class="eyebrow">El diagnóstico</span>
-    <h2>Estudiaste para sanar pacientes, no para llenar formularios.</h2>
-    <p class="body">Como médico independiente, tú eres el motor y el factor decisivo para que tu consultorio funcione y prospere día con día. Sin embargo, pasar tus jornadas saltando de una herramienta aislada a otra para revisar pagos, confirmar citas por chat y transcribir notas te drena la energía. El desorden de una administración manual genera retrasos de rendimiento y <em>deudas de tiempo</em>. Es momento de migrar de las automatizaciones aisladas hacia una verdadera orquestación clínica, profundamente integrada.</p>
-  </div>
-</section>
-
-<!-- ====== SECTION 3 · ANATOMY PLATE ====== -->
-<section class="anatomia" id="anatomia">
-  <div class="wrap">
-    <span class="eyebrow">Lámina I — La anatomía del sistema</span>
-    <div class="sec-head">
-      <h2>Un ecosistema clínico inteligente, inspirado en la anatomía humana.</h2>
-      <p class="intro">Cada parte del cuerpo cumple una función precisa. Bajo esa misma lógica construimos una plataforma integrada donde el software piensa, se fundamenta, se conecta y actúa en perfecta armonía.</p>
-    </div>
-
-    <div class="plate-grid">
-      <!-- FIGURE -->
-      <div class="figure-frame">
-        <div class="fcap"><span>Lámina I</span><span>El organismo operativo</span></div>
-        <svg viewBox="0 0 360 540" role="img" aria-label="Lámina anatómica del sistema: cerebro, biblioteca, sistema nervioso y manos conectados a una columna central.">
-          <defs>
-            <radialGradient id="g" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#2dd4bf" stop-opacity=".55"/>
-              <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-
-          <!-- central spine -->
-          <path id="spine" d="M150 56 C150 150 150 150 150 230 C150 320 150 320 150 470"
-                fill="none" stroke="#334155" stroke-width="2"/>
-          <!-- animated signal -->
-          <path class="signal" d="M150 56 C150 150 150 150 150 230 C150 320 150 320 150 470"/>
-
-          <!-- leader lines to roman numerals -->
-          <g stroke="#334155" stroke-width="1" stroke-dasharray="3 3">
-            <line x1="150" y1="74"  x2="300" y2="60"/>
-            <line x1="150" y1="216" x2="300" y2="200"/>
-            <line x1="150" y1="330" x2="300" y2="330"/>
-            <line x1="150" y1="466" x2="300" y2="478"/>
-          </g>
-          <g text-anchor="middle">
-            <circle cx="312" cy="60"  r="11" fill="#0f172a" stroke="#14b8a6"/><text x="312" y="65" fill="#2dd4bf" font-family="Inter,sans-serif" font-size="12" font-weight="600">I</text>
-            <circle cx="312" cy="200" r="11" fill="#0f172a" stroke="#14b8a6"/><text x="312" y="205" fill="#2dd4bf" font-family="Inter,sans-serif" font-size="12" font-weight="600">II</text>
-            <circle cx="312" cy="330" r="11" fill="#0f172a" stroke="#14b8a6"/><text x="312" y="335" fill="#2dd4bf" font-family="Inter,sans-serif" font-size="11" font-weight="600">III</text>
-            <circle cx="312" cy="478" r="11" fill="#0f172a" stroke="#14b8a6"/><text x="312" y="483" fill="#2dd4bf" font-family="Inter,sans-serif" font-size="11" font-weight="600">IV</text>
-          </g>
-
-          <!-- I · BRAIN : node network -->
-          <g class="region" data-region="cerebro">
-            <circle class="glow" cx="150" cy="72" r="46" fill="url(#g)"/>
-            <g stroke="#cbd5e1" stroke-width="1.4" fill="#cbd5e1">
-              <line x1="150" y1="72" x2="128" y2="56"/><line x1="150" y1="72" x2="172" y2="56"/>
-              <line x1="150" y1="72" x2="120" y2="84"/><line x1="150" y1="72" x2="180" y2="84"/>
-              <line x1="128" y1="56" x2="172" y2="56"/><line x1="120" y1="84" x2="150" y2="96"/>
-              <line x1="180" y1="84" x2="150" y2="96"/>
-              <circle cx="150" cy="72" r="4.5"/><circle cx="128" cy="56" r="3"/><circle cx="172" cy="56" r="3"/>
-              <circle cx="120" cy="84" r="3"/><circle cx="180" cy="84" r="3"/><circle cx="150" cy="96" r="3"/>
-            </g>
-          </g>
-
-          <!-- II · LIBRARY : stacked shelves -->
-          <g class="region" data-region="biblioteca">
-            <circle class="glow" cx="150" cy="200" r="44" fill="url(#g)"/>
-            <g stroke="#cbd5e1" stroke-width="1.6" stroke-linecap="round">
-              <line x1="116" y1="184" x2="184" y2="184"/>
-              <line x1="116" y1="200" x2="184" y2="200"/>
-              <line x1="116" y1="216" x2="184" y2="216"/>
-              <line x1="116" y1="184" x2="116" y2="216"/>
-              <line x1="184" y1="184" x2="184" y2="216"/>
-            </g>
-            <circle cx="150" cy="200" r="4" fill="#cbd5e1"/>
-          </g>
-
-          <!-- III · NERVOUS SYSTEM : branching dendrites -->
-          <g class="region" data-region="nervioso">
-            <circle class="glow" cx="150" cy="330" r="58" fill="url(#g)"/>
-            <g stroke="#cbd5e1" stroke-width="1.4" fill="none" stroke-linecap="round">
-              <path d="M150 300 C120 312 104 300 92 312"/>
-              <path d="M150 318 C116 330 96 326 84 340"/>
-              <path d="M150 342 C118 350 102 360 94 372"/>
-              <path d="M150 300 C180 312 196 300 208 312"/>
-              <path d="M150 318 C184 330 204 326 216 340"/>
-              <path d="M150 342 C182 350 198 360 206 372"/>
-            </g>
-            <g fill="#cbd5e1">
-              <circle cx="92" cy="312" r="2.6"/><circle cx="84" cy="340" r="2.6"/><circle cx="94" cy="372" r="2.6"/>
-              <circle cx="208" cy="312" r="2.6"/><circle cx="216" cy="340" r="2.6"/><circle cx="206" cy="372" r="2.6"/>
-            </g>
-          </g>
-
-          <!-- IV · HANDS : two limbs with agent endpoints -->
-          <g class="region" data-region="manos">
-            <circle class="glow" cx="150" cy="478" r="52" fill="url(#g)"/>
-            <g stroke="#cbd5e1" stroke-width="1.6" fill="none" stroke-linecap="round">
-              <path d="M150 440 C150 470 132 480 112 492 M112 492 l-12 -4 M112 492 l-2 -12 M112 492 l10 8"/>
-              <path d="M150 440 C150 470 168 480 188 492 M188 492 l12 -4 M188 492 l2 -12 M188 492 l-10 8"/>
-            </g>
-            <g fill="#2dd4bf">
-              <circle cx="112" cy="492" r="3.4"/><circle cx="188" cy="492" r="3.4"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-
-      <!-- LEGEND -->
-      <ol class="legend">
-        <li data-target="cerebro" tabindex="0">
-          <span class="num">I</span>
-          <span class="tag">Reasoning · motor de razonamiento</span>
-          <h3>El Cerebro <span class="organ">/ cerebrum</span></h3>
-          <p>Lee, procesa e interpreta los datos con una lógica médica avanzada para ayudarte a analizar y estructurar de forma inmediata la información de cada consulta.</p>
-        </li>
-        <li data-target="biblioteca" tabindex="0">
-          <span class="num">II</span>
-          <span class="tag">RAG · base de conocimiento</span>
-          <h3>La Biblioteca <span class="organ">/ memoria</span></h3>
-          <p>Conecta el cerebro de la IA directamente con tus expedientes, notas previas e historiales activos. Cada respuesta e informe se ancla en tus datos clínicos reales, no en memorias genéricas de internet.</p>
-        </li>
-        <li data-target="nervioso" tabindex="0">
-          <span class="num">III</span>
-          <span class="tag">MCP · conectividad central</span>
-          <h3>El Sistema Nervioso <span class="organ">/ red</span></h3>
-          <p>El cableado maestro que unifica tu agenda, tus terminales de pago, los registros de aseguradoras y los expedientes bajo un mismo estándar de comunicación — adiós al agotador salto entre aplicaciones.</p>
-        </li>
-        <li data-target="manos" tabindex="0">
-          <span class="num">IV</span>
-          <span class="tag">Agents · agentes autónomos</span>
-          <h3>Las Manos <span class="organ">/ ejecución</span></h3>
-          <p>Dejamos de ser un asistente de texto pasivo para ejecutar tareas por ti. Los agentes automatizan flujos completos de extremo a extremo: coordinan agendas, procesan seguimientos y actualizan registros sin que intervengas en cada paso.</p>
-        </li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SECTION 4 · AUTONOMOUS PRACTICE ====== -->
-<section class="auto" id="autonomo">
-  <div class="wrap">
-    <span class="eyebrow">Lámina II — Consultorio autónomo</span>
-    <div class="sec-head">
-      <h2>La visión de la <span class="grad">empresa autónoma</span>, llevada a tu práctica médica privada.</h2>
-      <p class="intro">Transformamos la gestión de tu negocio médico en un entorno impulsado por la ejecución inteligente, donde el análisis y la acción viven en el mismo lugar.</p>
-    </div>
-    <div class="cards" id="beneficios">
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 6.5C17 4.6 14.8 4 12 4S7 4.8 7 7s2.2 2.8 5 3.3 5 1.4 5 3.7-2.2 3-5 3-5-.8-5-2.5"/></svg></div>
-        <h3>Finanzas clínicas autónomas</h3>
-        <p>Olvídate de conciliar a mano los cobros de pacientes o las liquidaciones de aseguradoras en hojas de cálculo externas. El sistema ejecuta la administración financiera directo en el núcleo operativo del consultorio.</p>
-      </div>
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-1.2 4.3A8.5 8.5 0 0 1 12 20a8.4 8.4 0 0 1-4.3-1.2L3 20l1.2-4.7A8.5 8.5 0 1 1 21 11.5z"/></svg></div>
-        <h3>Trabajo conversacional y contextual</h3>
-        <p>Reduce la fatiga digital con una interfaz donde los conocimientos analíticos de tu práctica y las acciones clínicas del día conviven de forma fluida, dentro de un entorno conversacional guiado por el contexto.</p>
-      </div>
-      <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-3 8.3-7 9.5C8 19.3 5 15.4 5 11V6l7-3z"/><path d="M9.2 12l1.8 1.8 3.8-3.8"/></svg></div>
-        <h3>Procesos con un núcleo limpio</h3>
-        <p>Construimos una infraestructura libre de procesos desordenados — un <em>clean core</em> que asegura que los agentes operen bajo reglas estrictas de gobernanza, control y datos médicos confiables.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ====== SECTION 5 · HUMAN FACTOR ====== -->
-<section class="human">
-  <div class="wrap human-grid">
-    <div>
-      <span class="eyebrow">El médico en el centro</span>
-      <h2 class="sec-head" style="font-size:clamp(28px,4.2vw,44px)">Diseñado con el médico en el centro del ecosistema.</h2>
-      <p class="body">Incluso en un futuro impulsado por sistemas autónomos, los profesionales de la salud siguen siendo el factor decisivo e indispensable para que el cambio realmente se adopte. Por eso heyanatomía <strong>no requiere que sepas programar</strong> ni que configures arquitecturas técnicas complejas. Colocamos fuertes capas de gobernanza de datos para proteger la confidencialidad médica y permitir que la inteligencia artificial se adapte con naturalidad a tu criterio clínico.</p>
-      <div class="chips">
-        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Sin escribir código</span>
-        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.4-3 8.3-7 9.5C8 19.3 5 15.4 5 11V6l7-3z"/></svg>Gobernanza de datos</span>
-        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Confidencialidad médica</span>
-      </div>
-    </div>
-    <aside class="human-aside">
-      <p class="q">“La inteligencia artificial se adapta a tu criterio clínico — no al revés.”</p>
-      <p class="a">Principio de diseño · heyanatomía</p>
-    </aside>
-  </div>
-</section>
-
-<!-- ====== SECTION 6 · FINAL CTA ====== -->
-<section class="final">
-  <div class="wrap">
-    <div class="inner">
-      <span class="eyebrow" style="justify-content:center">Empezar ahora</span>
-      <h2>Es momento de instalar un <span class="grad">sistema nervioso central</span> en tu consultorio.</h2>
-      <p>Únete a la era de la gestión clínica autónoma y recupera tus horas libres. Vive una demostración en tiempo real, interactiva y conversacional.</p>
-      <a class="btn btn-primary btn-wa" href="https://wa.me/521XXXXXXXXXX?text=Hola%2C%20quiero%20iniciar%20mi%20demo%20aut%C3%B3noma%20de%20heyanatom%C3%ADa" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-5-4.3-5.1-4.5-.2-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .7.5l.9 2c.1.2.1.4 0 .6l-.4.6c-.2.2-.3.4-.1.7.1.3.7 1.1 1.4 1.8 1 .8 1.7 1.1 2 1.2.2.1.4.1.6-.1l.7-.9c.2-.3.4-.2.7-.1l1.9.9c.3.2.5.2.6.4.1.1.1.7-.1 1.4z"/></svg>
-        Iniciar mi demo autónoma en WhatsApp</a>
-      <p class="micro">Respuesta en segundos · sin instalar nada · sin compromiso</p>
-    </div>
-  </div>
-</section>
+  </aside>
 </main>
 
-<!-- ====== FOOTER ====== -->
-<footer>
-  <div class="wrap">
-    <div class="foot-inner">
-      <a class="brand" href="#top"><span class="hey" style="font-weight:300;color:var(--muted)">hey</span><span class="grad">anatomía</span></a>
-      <nav class="foot-links" aria-label="Pie de página">
-        <a href="#anatomia">La anatomía</a>
-        <a href="#autonomo">Consultorio autónomo</a>
-        <a href="#beneficios">Beneficios</a>
-        <a href="#demo">Probar demo</a>
-      </nav>
-    </div>
-    <div class="foot-bottom">
-      <span>© 2026 heyanatomía.com · El sistema nervioso digital para consultorios médicos.</span>
-      <span>heyanatomia.com</span>
+<!-- Configuración -->
+<div class="overlay" id="ovSetup" role="dialog" aria-modal="true" aria-labelledby="tSetup">
+  <div class="modal">
+    <h3 id="tSetup">Nueva partida</h3>
+    <p style="margin:0 0 12px;color:var(--muted)">Juega cada estudiante con su nombre o forma equipos.</p>
+    <label for="mode">Modalidad</label>
+    <select id="mode"><option value="ind">Individual (cada estudiante escribe su nombre)</option><option value="eq">Por equipos</option></select>
+    <div style="margin-top:10px"><label for="count">Número de jugadores</label>
+    <select id="count"></select></div>
+    <div class="namegrid" id="names"></div>
+    <div class="row">
+      <button class="btn-ghost" id="bCancelSetup">Cancelar</button>
+      <button class="btn-accent" id="bStart">Comenzar</button>
     </div>
   </div>
-</footer>
+</div>
+
+<!-- Pregunta -->
+<div class="overlay" id="ovQ" role="dialog" aria-modal="true" aria-labelledby="qText">
+  <div class="modal">
+    <span class="tag" id="qTag"></span>
+    <h3 id="qText"></h3>
+    <div class="opts" id="qOpts"></div>
+    <div class="fb" id="qFb"></div>
+    <div class="row"><button class="btn-accent" id="bQNext" style="display:none">Continuar</button></div>
+  </div>
+</div>
+
+<!-- Aviso -->
+<div class="overlay" id="ovInfo" role="dialog" aria-modal="true" aria-labelledby="iTitle">
+  <div class="modal">
+    <h3 id="iTitle"></h3>
+    <div id="iBody" class="rules"></div>
+    <div class="row"><button class="btn-accent" id="bInfoOk">Cerrar</button></div>
+  </div>
+</div>
 
 <script>
-  (function(){
-    var items = document.querySelectorAll('.legend li[data-target]');
-    var regions = {};
-    document.querySelectorAll('.region').forEach(function(r){ regions[r.dataset.region] = r; });
-    function lit(t, on){
-      var li = document.querySelector('.legend li[data-target="'+t+'"]');
-      if(li) li.classList.toggle('active', on);
-      if(regions[t]) regions[t].classList.toggle('lit', on);
-    }
-    items.forEach(function(li){
-      var t = li.dataset.target;
-      li.addEventListener('mouseenter', function(){ lit(t,true); });
-      li.addEventListener('mouseleave', function(){ lit(t,false); });
-      li.addEventListener('focus', function(){ lit(t,true); });
-      li.addEventListener('blur', function(){ lit(t,false); });
-    });
-  })();
+(function(){
+"use strict";
+var N = 40;
+var COLORS = ["#007A99","#B45A0C","#0B1F3A","#7C3AED","#0F7B4A","#C2185B","#5B6B80","#B8860B"];
+var CATS = {
+  CLA:{name:"Clasificación", tag:"background:#CFF6FC;color:#0B1F3A"},
+  FOR:{name:"Forecasting", tag:"background:#DCE6F5;color:#0B1F3A"},
+  CLU:{name:"Clustering", tag:"background:#FDE7D3;color:#5A2D06"},
+  GEN:{name:"Conceptos y evaluación", tag:"background:#ECEFF3;color:#1B2B44"}
+};
+// Casillas especiales
+var OCAS = [5,9,14,18,23,27,32,36];
+var SPECIAL = {
+  6:{name:"Puente", lbl:"Puente: salta a la 12"},
+  19:{name:"Sobreajuste", lbl:"Sobreajuste: pierdes 1 turno"},
+  26:{name:"Validación cruzada", lbl:"Validación: avanza 3"},
+  31:{name:"Datos sin etiqueta", lbl:"Sin etiqueta: pierdes 1 turno"},
+  34:{name:"Mínimo local", lbl:"Mínimo local: regresa a la 28"},
+  39:{name:"Fuga de datos", lbl:"Fuga de datos: regresa a la 30"}
+};
+var CYCLE = ["CLA","FOR","CLU","GEN"];
+
+// Banco de preguntas: [categoría, pregunta, [opciones], índice correcto, explicación]
+var BANK = [
+["GEN","¿Qué hace que un problema sea de aprendizaje supervisado?",["Los datos tienen una etiqueta con la respuesta correcta","Los datos son muy grandes","No hay que limpiar los datos","El modelo no necesita entrenarse"],0,"En el aprendizaje supervisado cada dato trae su etiqueta (aprobó o no, spam o normal) y el modelo aprende a predecirla."],
+["GEN","Quieres predecir la calificación final (0 a 100) de un estudiante. ¿Qué tipo de problema es?",["Clustering","Forecasting o regresión","Clasificación","Ninguno"],1,"La salida es un número continuo, así que es un problema de forecasting (regresión)."],
+["GEN","Quieres saber si un cliente cancelará su suscripción (sí o no). ¿Qué tipo de problema es?",["Clustering","Forecasting","Clasificación","Reducción de dimensiones"],2,"La salida es una categoría (sí o no): es clasificación."],
+["GEN","Quieres descubrir perfiles de clientes sin saber de antemano cuáles existen. ¿Qué usas?",["Clustering","Regresión lineal","Regresión logística","Naive Bayes"],0,"Sin etiquetas, buscamos grupos de elementos parecidos: clustering, aprendizaje no supervisado."],
+["GEN","Un modelo acierta 100% en entrenamiento y 55% con datos nuevos. ¿Qué le pasa?",["Subajuste","Sobreajuste","Está perfecto","Le faltan variables"],1,"Memorizó los datos de entrenamiento y no generaliza: es sobreajuste."],
+["GEN","¿Para qué se separan datos de prueba?",["Para entrenar más rápido","Para medir el desempeño con datos que el modelo no vio","Para eliminar datos atípicos","Para tener más etiquetas"],1,"Los datos de prueba simulan datos nuevos; con ellos medimos si el modelo generaliza."],
+["GEN","En Teachable Machine hiciste 20 pruebas y el modelo acertó 17. ¿Cuál es la exactitud?",["17%","75%","85%","90%"],2,"Exactitud = 17 ÷ 20 × 100 = 85%."],
+["GEN","Tu modelo de Teachable Machine falla cuando cambia la iluminación. ¿Qué mejora más?",["Entrenar con imágenes con distintas luces y fondos","Usar menos imágenes","Usar una sola persona","Quitar una categoría"],0,"Más variedad en los datos de entrenamiento ayuda a que el modelo generalice a nuevas condiciones."],
+["GEN","¿Qué es la validación cruzada?",["Entrenar y probar varias veces con distintas particiones de los datos","Revisar las etiquetas a mano","Usar dos modelos al mismo tiempo","Graficar los residuos"],0,"Se rota qué parte de los datos sirve de prueba para elegir parámetros de forma más confiable, como el mínimo por hoja."],
+["GEN","¿Por qué en Teachable Machine conviene tener una cantidad parecida de imágenes por categoría?",["Para que el modelo no favorezca a la categoría con más ejemplos","Porque si no, no deja entrenar","Para que pese menos el archivo","No importa"],0,"Si una clase tiene muchos más ejemplos, el modelo tiende a predecirla más seguido."],
+["CLA","En un árbol de decisión, ¿cómo se llama el nodo de hasta arriba?",["Hoja","Raíz","Rama terminal","Centroide"],1,"La primera pregunta del árbol es el nodo raíz."],
+["CLA","En un árbol de clasificación, ¿qué entrega una hoja?",["El promedio del grupo","La categoría mayoritaria del grupo","La pendiente","La distancia al centro"],1,"La hoja de un árbol de clasificación da la categoría con más casos en ella."],
+["CLA","¿Cuál es la impureza de Gini de una hoja con 4 que aprueban y 1 que no?",["0.20","0.32","0.50","0.80"],1,"1 − (4/5)² − (1/5)² = 1 − 0.64 − 0.04 = 0.32."],
+["CLA","¿Cuál es el Gini de una hoja donde todos aprobaron?",["0","0.5","1","No se puede calcular"],0,"Una hoja pura tiene impureza 0."],
+["CLA","Entre tres preguntas candidatas con Gini 0.32, 0.42 y 0.17, ¿cuál va en la raíz?",["La de 0.42","La de 0.32","La de 0.17","Cualquiera"],2,"Se elige la que deja los grupos más puros: el Gini más bajo."],
+["CLA","¿Cómo se prueban umbrales para una variable numérica, como horas de estudio?",["Se usa siempre la media","Se ordenan los valores y se prueba el promedio entre cada par de vecinos","Se usa el valor máximo","Se elige al azar"],1,"Cada promedio entre vecinos es un umbral candidato; gana el de menor Gini."],
+["CLA","¿Qué técnica ayuda a evitar que un árbol sobreajuste?",["Agregar más hojas","Podar o exigir un mínimo de casos por hoja","Usar Gini igual a 1","Quitar la raíz"],1,"Podar o limitar el crecimiento evita hojas con uno o dos casos."],
+["CLA","En Naive Bayes, ¿qué es el prior?",["La probabilidad inicial de cada clase antes de ver el mensaje","La última palabra del mensaje","El número de palabras","El umbral de 50%"],0,"Es la suposición inicial; por ejemplo, 9 de 12 mensajes normales da un prior de 0.75."],
+["CLA","«gratis» aparece 6 veces entre las 8 palabras de spam. ¿Cuánto vale P(gratis | spam)?",["0.06","0.25","0.75","6"],2,"6 ÷ 8 = 0.75."],
+["CLA","¿Por qué se suma alfa = 1 a cada conteo en Naive Bayes?",["Para que ninguna probabilidad sea cero","Para que el prior aumente","Para ordenar las palabras","Para que el modelo sea más rápido"],0,"Una palabra nunca vista en una clase daría probabilidad cero y anularía todo el producto."],
+["CLA","¿Por qué a Naive Bayes le dicen «ingenuo»?",["Porque usa pocos datos","Porque ignora el orden de las palabras y las trata como independientes","Porque siempre se equivoca","Porque no usa probabilidades"],1,"Trata el mensaje como una bolsa de palabras: «examen reunión» puntúa igual que «reunión examen»."],
+["CLA","Puntaje normal = 0.050 y puntaje spam = 0.004. ¿Cómo se clasifica el mensaje?",["Spam","Normal","Empate","No se puede decidir"],1,"Gana la clase con mayor puntaje: normal."],
+["CLA","¿Qué forma tiene la curva de la regresión logística?",["Recta","Parábola","Curva en S que va de 0 a 1","Escalones"],2,"La función logística es una curva en S, y se lee como probabilidad."],
+["CLA","La regresión logística da 0.88 de probabilidad de aprobar. Con umbral de 50%, ¿qué predice?",["No aprueba","Aprueba","No se puede saber","50% aprueba"],1,"0.88 es mayor que 0.50, así que clasifica como «aprueba»."],
+["CLA","¿Con qué método se ajusta la regresión logística?",["Mínimos cuadrados","Máxima verosimilitud","Gini","Distancia euclidiana"],1,"Busca la curva que hace más probable observar los datos reales."],
+["CLA","¿Qué prueba indica si una variable sirve en la regresión logística?",["Prueba de Wald","Método del codo","Impureza de Gini","Enlace simple"],0,"La prueba de Wald revisa si el efecto de la variable es distinto de cero."],
+["CLA","¿Qué tipo de modelo entrenas en Teachable Machine?",["Clustering","Regresión lineal","Clasificación supervisada","Árbol de regresión"],2,"Cada imagen tiene la etiqueta de su categoría: es clasificación supervisada."],
+["FOR","En regresión lineal, ¿qué es un residuo?",["La pendiente","La distancia vertical de un punto a la recta","El valor p","El promedio de y"],1,"Es la diferencia entre el valor real y el que predice la recta."],
+["FOR","¿Por qué se llama «mínimos cuadrados»?",["Porque usa pocos datos","Porque elige la recta con la menor suma de residuos al cuadrado","Porque la pendiente es pequeña","Porque eleva x al cuadrado"],1,"Se busca la recta que minimiza la suma de los residuos al cuadrado."],
+["FOR","Con Calificación = 50 + 4 × horas, ¿cuánto se predice con 8 horas?",["58","74","82","90"],2,"50 + 4 × 8 = 82."],
+["FOR","Variación alrededor de la media = 100 y alrededor de la recta = 40. ¿Cuánto vale R²?",["0.40","0.60","1.40","2.50"],1,"(100 − 40) ÷ 100 = 0.60."],
+["FOR","R² = 0.60 significa que...",["El modelo acierta 60% de las veces","La variable explica 60% de la variación de y","La pendiente es 0.60","El valor p es 0.60"],1,"R² es la proporción de la variación explicada por el modelo."],
+["FOR","¿Para qué sirve el valor p en regresión lineal?",["Para saber si la relación encontrada es confiable y no fruto del azar","Para calcular la pendiente","Para elegir el umbral","Para medir distancias"],0,"Con pocos datos, cualquier recta ajusta bien; el valor p, a partir de F, dice si la relación es significativa."],
+["FOR","¿Por qué se usa la R² ajustada?",["Porque agregar variables nunca baja la R², aunque sean inútiles","Porque es más grande","Porque no requiere datos","Porque elimina la pendiente"],0,"Penaliza el número de parámetros para no premiar variables absurdas."],
+["FOR","Con dos variables (estudio y sueño), ¿qué se ajusta en regresión lineal múltiple?",["Una recta","Un plano","Una curva en S","Un dendrograma"],1,"Con dos predictores, el modelo es un plano."],
+["FOR","¿Qué predice cada hoja de un árbol de regresión?",["Una categoría","El promedio de la variable en ese grupo","La mediana de x","La probabilidad"],1,"Cada hoja da el promedio de las observaciones que caen en ella."],
+["FOR","¿Cómo elige su corte un árbol de regresión?",["Menor Gini","Menor suma de residuos al cuadrado","Mayor R²","Al azar"],1,"Prueba umbrales y se queda con el de menor suma de residuos al cuadrado."],
+["FOR","¿Cuándo conviene un árbol de regresión en lugar de una recta?",["Cuando la relación sube y luego baja, sin forma de recta","Cuando hay solo dos datos","Cuando y es una categoría","Nunca"],0,"Por ejemplo, sueño y calificación: poco y demasiado sueño bajan la calificación."],
+["FOR","Un árbol de regresión predice perfecto todos los datos de entrenamiento. ¿Qué indica?",["Que es el mejor modelo","Probable sobreajuste","Que R² es cero","Que no hay varianza en y"],1,"Sin sesgo pero con mucha varianza: probablemente falle con datos nuevos."],
+["FOR","¿Qué tienen en común un árbol de clasificación y uno de regresión?",["Ambos dividen los datos con preguntas y umbrales","Ambos usan curva en S","Ambos predicen categorías","Ambos usan centroides"],0,"La estructura es igual; cambian las hojas (categoría o número) y el criterio (Gini o residuos)."],
+["CLU","¿Qué representa la K en K-means?",["El número de variables","El número de grupos que queremos","La distancia máxima","El número de iteraciones"],1,"K es cuántos grupos (clusters) buscamos."],
+["CLU","¿Cuándo se detiene K-means?",["Cuando los grupos ya no cambian","Después de una iteración","Cuando K llega a cero","Cuando todos los puntos están en un grupo"],0,"Se repite asignar y recalcular centros hasta que nada cambia."],
+["CLU","¿Por qué K-means se ejecuta varias veces?",["Porque el resultado depende de los centros iniciales al azar","Para aumentar K","Para tener etiquetas","Para calcular R²"],0,"Se guarda el agrupamiento con menor variación dentro de los grupos."],
+["CLU","¿Qué método ayuda a elegir el valor de K?",["Método del codo","Prueba de Wald","Mínimos cuadrados","Enlace completo"],0,"Se grafica la variación contra K y se busca el punto donde deja de bajar mucho."],
+["CLU","Si cada punto fuera su propio grupo, la variación dentro de los grupos sería...",["Máxima","Cero","Uno","Negativa"],1,"Es cero, pero ese agrupamiento no sirve de nada."],
+["CLU","Entre (2,3) y (6,4), ¿cuál es la distancia euclidiana?",["3","4.12","5","17"],1,"√(4² + 1²) = √17 ≈ 4.12."],
+["CLU","Entre (2,3) y (6,4), ¿cuál es la distancia Manhattan?",["4","4.12","5","7"],2,"Suma de diferencias absolutas: 4 + 1 = 5."],
+["CLU","¿Cómo empieza el clustering jerárquico aglomerativo?",["Con K centros al azar","Con cada punto como su propio grupo","Con todos en un grupo","Con un árbol de decisión"],1,"Cada punto es un grupo y se van uniendo los más cercanos."],
+["CLU","¿Qué es el enlace simple?",["La distancia entre los miembros más cercanos de dos grupos","La distancia entre los más lejanos","El promedio de todas las distancias","La distancia al centro"],0,"Enlace completo usa los más lejanos; promedio, el promedio de todos los pares."],
+["CLU","¿Cómo se llama el diagrama de árbol del clustering jerárquico?",["Histograma","Dendrograma","Diagrama de caja","Árbol de regresión"],1,"El dendrograma muestra a qué altura se une cada grupo."],
+["CLU","¿Cómo eliges cuántos grupos tomar en un dendrograma?",["Cortándolo con una línea horizontal a cierta altura","Contando las hojas","Con la prueba de Wald","Con el prior"],0,"Las uniones muy altas separan grupos muy distintos; ahí conviene cortar."],
+["CLU","Con 100 mil estudiantes, ¿qué método de clustering es más práctico?",["Jerárquico","K-means","Ambos igual","Ninguno"],1,"El jerárquico necesita todas las distancias por pares; K-means escala mucho mejor."],
+["CLU","¿Qué diferencia principal hay entre K-means y jerárquico?",["K-means pide K al inicio; el jerárquico muestra todas las uniones","K-means usa etiquetas","El jerárquico predice números","No hay diferencia"],0,"En el jerárquico decides el número de grupos después, al cortar el dendrograma."]
+];
+
+// --- Estado ---
+var S = null;
+var used = {};
+var $ = function(id){return document.getElementById(id);};
+
+function cellType(i){
+  if(i===0) return "START";
+  if(i===N) return "META";
+  if(OCAS.indexOf(i)>=0) return "OCA";
+  if(SPECIAL[i]) return "SPE";
+  return CYCLE[i % CYCLE.length];
+}
+function cellLabel(i){
+  var t=cellType(i);
+  if(t==="START") return "Salida";
+  if(t==="META") return "Meta";
+  if(t==="OCA") return "Oca: pregunta y salta";
+  if(t==="SPE") return SPECIAL[i].lbl;
+  return CATS[t].name;
+}
+
+// Tablero en serpentina: 41 casillas (0 a 40), 8 columnas
+function buildBoard(){
+  var b=$("board"); b.innerHTML="";
+  var cols=8, rows=Math.ceil((N+1)/cols);
+  var order=[];
+  for(var r=0;r<rows;r++){
+    var row=[];
+    for(var c=0;c<cols;c++){ var idx=r*cols+c; row.push(idx<=N?idx:null); }
+    if(r%2===1) row.reverse();
+    order=order.concat(row);
+  }
+  order.forEach(function(i){
+    var d=document.createElement("div");
+    if(i===null){ d.style.visibility="hidden"; b.appendChild(d); return; }
+    d.className="cell c-"+cellType(i);
+    d.id="cell"+i;
+    d.innerHTML='<div class="num">'+i+'</div><div class="lbl">'+cellLabel(i)+'</div><div class="tokens" id="tk'+i+'"></div>';
+    d.setAttribute("aria-label","Casilla "+i+": "+cellLabel(i));
+    b.appendChild(d);
+  });
+}
+
+function drawTokens(){
+  for(var i=0;i<=N;i++){ var t=$("tk"+i); if(t) t.innerHTML=""; var c=$("cell"+i); if(c) c.classList.remove("active"); }
+  if(!S) return;
+  S.players.forEach(function(p,k){
+    var t=document.createElement("div");
+    t.className="tok"; t.style.background=p.color;
+    t.textContent=initials(p.name); t.title=p.name;
+    $("tk"+p.pos).appendChild(t);
+  });
+  var cur=S.players[S.turn];
+  if(cur && !S.over) $("cell"+cur.pos).classList.add("active");
+}
+function initials(n){ var w=n.trim().split(/\s+/); return (w[0][0]+(w[1]?w[1][0]:"")).toUpperCase(); }
+
+function renderPlayers(){
+  var ul=$("players"); ul.innerHTML="";
+  if(!S){ ul.innerHTML='<li style="color:var(--muted)">Sin partida en curso</li>'; return; }
+  S.players.forEach(function(p,k){
+    var li=document.createElement("li");
+    if(k===S.turn && !S.over) li.className="now";
+    li.innerHTML='<span class="tok" style="background:'+p.color+'">'+initials(p.name)+'</span><span>'+esc(p.name)+' · casilla '+p.pos+(p.skip?' · pierde turno':'')+'</span><span class="sc">'+p.score+' pts</span>';
+    ul.appendChild(li);
+  });
+}
+function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+
+function updateTurn(){
+  if(!S){ $("turnInfo").innerHTML='Pulsa <b>Nueva partida</b> para registrar a los jugadores.'; $("bRoll").disabled=true; return; }
+  if(S.over){ $("bRoll").disabled=true; return; }
+  var p=S.players[S.turn];
+  $("turnInfo").innerHTML='Turno de <b>'+esc(p.name)+'</b> (casilla '+p.pos+').';
+  $("bRoll").disabled=false;
+  renderPlayers(); drawTokens();
+}
+function log(t){ if(S) S.log.push(t); }
+function say(t){ $("msg").textContent=t; }
+
+// --- Configuración ---
+function openSetup(){
+  var cnt=$("count"); cnt.innerHTML="";
+  for(var i=2;i<=8;i++){ var o=document.createElement("option"); o.value=i; o.textContent=i; cnt.appendChild(o); }
+  cnt.value="4"; renderNames(); show("ovSetup");
+  setTimeout(function(){ var f=$("names").querySelector("input"); if(f) f.focus(); },50);
+}
+function renderNames(){
+  var n=+$("count").value, eq=$("mode").value==="eq", g=$("names"), prev=[].map.call(g.querySelectorAll("input"),function(x){return x.value;});
+  g.innerHTML="";
+  for(var i=0;i<n;i++){
+    var w=document.createElement("div");
+    var lab=eq?("Equipo "+(i+1)):("Estudiante "+(i+1));
+    w.innerHTML='<label for="nm'+i+'">'+lab+'</label><input type="text" id="nm'+i+'" maxlength="24" placeholder="'+(eq?"Nombre del equipo":"Nombre")+'">';
+    g.appendChild(w);
+    if(prev[i]) w.querySelector("input").value=prev[i];
+  }
+}
+function startGame(){
+  var n=+$("count").value, eq=$("mode").value==="eq", players=[];
+  for(var i=0;i<n;i++){
+    var v=$("nm"+i).value.trim() || (eq?("Equipo "+(i+1)):("Jugador "+(i+1)));
+    players.push({name:v,color:COLORS[i],pos:0,score:0,skip:false});
+  }
+  S={players:players,turn:0,over:false,log:[],rolls:0};
+  used={};
+  hide("ovSetup");
+  log("Nueva partida ("+(eq?"equipos":"individual")+"): "+players.map(function(p){return p.name;}).join(", ")+".");
+  say("¡A jugar! Lleguen exacto a la casilla 40.");
+  $("die").textContent="–";
+  updateTurn();
+}
+
+// --- Juego ---
+function roll(){
+  if(!S||S.over) return;
+  $("bRoll").disabled=true;
+  var d=$("die"); d.classList.remove("roll"); void d.offsetWidth; d.classList.add("roll");
+  var v=1+Math.floor(Math.random()*6), k=0;
+  var anim=setInterval(function(){ d.textContent=1+Math.floor(Math.random()*6); if(++k>6){ clearInterval(anim); d.textContent=v; move(v); } },60);
+}
+function move(v){
+  var p=S.players[S.turn], from=p.pos, to=from+v;
+  if(to>N){ to=N-(to-N); log(p.name+" sacó "+v+" y rebota: de "+from+" a "+to+"."); say("Rebote: hay que llegar exacto a la 40."); }
+  else log(p.name+" sacó "+v+": de "+from+" a "+to+".");
+  p.pos=to; S.from=from; renderPlayers(); drawTokens();
+  setTimeout(function(){ landing(); },350);
+}
+function landing(){
+  var p=S.players[S.turn], t=cellType(p.pos);
+  if(p.pos===N){ return win(p); }
+  if(t==="OCA"){ ask(randomCat(), "oca"); return; }
+  if(t==="SPE"){ special(p); return; }
+  ask(t,"normal");
+}
+function randomCat(){ return CYCLE[Math.floor(Math.random()*CYCLE.length)]; }
+function special(p){
+  var i=p.pos, sp=SPECIAL[i], txt="";
+  if(i===6){ p.pos=12; txt="Cruzas el puente: avanzas a la casilla 12."; }
+  else if(i===19||i===31){ p.skip=true; txt=(i===19?"Tu modelo memorizó los datos de entrenamiento.":"Sin etiquetas no puedes entrenar un clasificador.")+" Pierdes 1 turno."; }
+  else if(i===26){ p.pos=29; txt="Validaste bien tu modelo: avanzas a la casilla 29."; }
+  else if(i===34){ p.pos=28; txt="Te quedaste en un mínimo local: regresas a la casilla 28."; }
+  else if(i===39){ p.pos=30; txt="Usaste datos de prueba para entrenar: regresas a la casilla 30."; }
+  log(p.name+" cae en «"+sp.name+"». "+txt);
+  info(sp.name, "<p>"+txt+"</p>", function(){
+    var t=cellType(p.pos);
+    if(i===6||i===26){ if(t==="OCA"){ ask(randomCat(),"oca"); return; } if(CATS[t]){ ask(t,"normal"); return; } }
+    nextTurn();
+  });
+}
+function pick(cat){
+  var pool=[]; BANK.forEach(function(q,k){ if(q[0]===cat && !used[k]) pool.push(k); });
+  if(!pool.length){ BANK.forEach(function(q,k){ if(q[0]===cat) delete used[k]; }); return pick(cat); }
+  var k=pool[Math.floor(Math.random()*pool.length)]; used[k]=true; return k;
+}
+function ask(cat,kind){
+  var k=pick(cat), q=BANK[k], p=S.players[S.turn];
+  $("qTag").textContent=(kind==="oca"?"Oca · ":"")+CATS[cat].name+" · "+p.name;
+  $("qTag").setAttribute("style",CATS[cat].tag);
+  $("qText").textContent=q[1];
+  var box=$("qOpts"); box.innerHTML="";
+  var idx=[0,1,2,3].sort(function(){return Math.random()-.5;});
+  idx.forEach(function(o,n){
+    var b=document.createElement("button");
+    b.className="opt"; b.textContent=String.fromCharCode(65+n)+") "+q[2][o];
+    b.onclick=function(){ answer(k,o,b,kind); };
+    box.appendChild(b);
+  });
+  var fb=$("qFb"); fb.className="fb"; fb.textContent="";
+  $("bQNext").style.display="none";
+  show("ovQ");
+  setTimeout(function(){ box.querySelector("button").focus(); },50);
+}
+function answer(k,o,btn,kind){
+  var q=BANK[k], ok=(o===q[3]), p=S.players[S.turn];
+  [].forEach.call($("qOpts").children,function(b){ b.disabled=true; if(b.textContent.slice(3)===q[2][q[3]]) b.classList.add("right"); });
+  if(!ok) btn.classList.add("wrong");
+  var fb=$("qFb");
+  var res="";
+  if(ok){
+    p.score++;
+    if(kind==="oca"){
+      var nx=OCAS.filter(function(x){return x>p.pos;})[0];
+      if(nx){ res=" De oca a oca: saltas a la casilla "+nx+" y tiras otra vez."; S.again=true; p.pos=nx; }
+      else { res=" Es la última oca: tiras otra vez."; S.again=true; }
+    } else res=" Te quedas en la casilla "+p.pos+".";
+    fb.className="fb ok"; fb.innerHTML="<b>¡Correcto! +1 punto.</b>"+res+"<br>"+q[4];
+    log(p.name+" respondió bien («"+q[1]+"»)."+res);
+  } else {
+    p.pos=S.from;
+    fb.className="fb no"; fb.innerHTML="<b>Incorrecto.</b> Regresas a la casilla "+S.from+".<br>Respuesta correcta: "+esc(q[2][q[3]])+". "+q[4];
+    log(p.name+" falló («"+q[1]+"») y regresa a la casilla "+S.from+".");
+  }
+  $("bQNext").style.display="inline-block"; $("bQNext").focus();
+  renderPlayers(); drawTokens();
+}
+function nextTurn(){
+  if(!S||S.over) return;
+  if(S.again){ S.again=false; say(S.players[S.turn].name+" tira otra vez."); updateTurn(); return; }
+  var n=S.players.length, guard=0;
+  do{
+    S.turn=(S.turn+1)%n;
+    var p=S.players[S.turn];
+    if(p.skip){ p.skip=false; log(p.name+" pierde su turno."); guard++; continue; }
+    break;
+  }while(guard<=n);
+  say(""); updateTurn();
+}
+function win(p){
+  p.score+=3; S.over=true;
+  log("¡"+p.name+" llega a la meta! +3 puntos.");
+  renderPlayers(); drawTokens();
+  showRanking("¡"+esc(p.name)+" llegó a la meta!");
+}
+function showRanking(title){
+  var r=S.players.slice().sort(function(a,b){ return b.pos-a.pos || b.score-a.score; });
+  var h='<p>Gana quien llega a la casilla 40. El resto se ordena por casilla y luego por puntos (respuestas correctas).</p><table class="rank"><tr><th>Lugar</th><th>Jugador</th><th>Casilla</th><th>Puntos</th></tr>';
+  r.forEach(function(p,i){ h+='<tr><td>'+(i+1)+'</td><td>'+esc(p.name)+'</td><td>'+p.pos+'</td><td>'+p.score+'</td></tr>'; });
+  h+='</table>';
+  info(title,h);
+  $("bRoll").disabled=true;
+  $("turnInfo").innerHTML='Partida terminada. Pulsa <b>Nueva partida</b> para volver a jugar.';
+}
+function endGame(){
+  if(!S||S.over){ info("Terminar partida","<p>No hay una partida en curso.</p>"); return; }
+  S.over=true; log("Partida terminada por el profesor o el grupo.");
+  renderPlayers(); drawTokens(); showRanking("Resultados de la partida");
+}
+
+// --- Modales ---
+var infoCb=null;
+function info(title,html,cb){ $("iTitle").textContent=title; $("iBody").innerHTML=html; infoCb=cb||null; show("ovInfo"); setTimeout(function(){$("bInfoOk").focus();},50); }
+function show(id){ $(id).classList.add("show"); }
+function hide(id){ $(id).classList.remove("show"); }
+
+function rules(){
+  info("Reglas", '<ol>'+
+  '<li>Juegan de 2 a 8 estudiantes o equipos. Todos inician en la Salida (casilla 0).</li>'+
+  '<li>En tu turno tira el dado y avanza. Para ganar hay que caer <b>exacto</b> en la 40; si te pasas, rebotas hacia atrás.</li>'+
+  '<li><b>Casillas de color:</b> responde una pregunta del tema (clasificación, forecasting, clustering o conceptos y evaluación). Si aciertas, ganas 1 punto y te quedas. Si fallas, regresas a la casilla donde estabas.</li>'+
+  '<li><b>Ocas</b> (casillas azul marino): responde una pregunta de cualquier tema. Si aciertas, «de oca a oca»: saltas a la siguiente oca y tiras otra vez.</li>'+
+  '<li><b>Casillas especiales</b> (amarillas): Puente (6) te lleva a la 12; Sobreajuste (19) y Datos sin etiqueta (31) te hacen perder 1 turno; Validación cruzada (26) te adelanta a la 29; Mínimo local (34) te regresa a la 28; Fuga de datos (39) te regresa a la 30.</li>'+
+  '<li>Llegar a la meta da 3 puntos extra. Si la partida se termina antes, gana quien esté más adelante; en empate, quien tenga más puntos.</li>'+
+  '<li>Respondan sin consultar apuntes: el objetivo es repasar. Cada respuesta trae una explicación para aprender del error.</li>'+
+  '</ol>');
+}
+function showLog(){
+  if(!S||!S.log.length){ info("Bitácora","<p>Todavía no hay movimientos registrados.</p>"); return; }
+  info("Bitácora", '<ol id="log">'+S.log.map(function(l){return "<li>"+esc(l)+"</li>";}).join("")+'</ol>');
+}
+
+$("bRules").onclick=rules;
+$("bLog").onclick=showLog;
+$("bNew").onclick=openSetup;
+$("bEnd").onclick=endGame;
+$("bRoll").onclick=roll;
+$("bStart").onclick=startGame;
+$("bCancelSetup").onclick=function(){ hide("ovSetup"); };
+$("count").onchange=renderNames;
+$("mode").onchange=renderNames;
+$("bQNext").onclick=function(){ hide("ovQ"); nextTurn(); };
+$("bInfoOk").onclick=function(){ hide("ovInfo"); var c=infoCb; infoCb=null; if(c) c(); };
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape" && $("ovInfo").classList.contains("show") && !infoCb) hide("ovInfo");
+});
+
+buildBoard();
+drawTokens();
+})();
 </script>
 </body>
 </html>
